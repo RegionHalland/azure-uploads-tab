@@ -1,0 +1,20 @@
+{
+    "name": "regionhalland/rh-azure-uploads",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Sebastian Marcusson",
+            "email": "sebastian@digitaliseringsbyran.se"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "Halland\\": "src/"
+      }
+    },
+    "require": {
+        "philo/laravel-blade": "^3.1",
+        "beberlei/azure-blob-storage": "^1.0",
+        "microsoft/windowsazure": "^0.5.7"
+    }
+}

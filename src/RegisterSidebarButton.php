@@ -10,6 +10,9 @@ class RegisterSidebarButton
 {
     public function __construct()
     {
+        $this->accountName = '';
+        $this->accountKey = '';
+        $this->containerName = '';
         $this->views = __DIR__ . '/views';
         $this->cache = __DIR__ . '/cache';
         $this->addTab();
@@ -37,16 +40,13 @@ class RegisterSidebarButton
     public function blobFileList()
     {
         $blobs = array();
-        $connectionString = "DefaultEndpointsProtocol=https;AccountName=[enternamehere];AccountKey=[enteraccountkeyhere]";
+        $connectionString = "DefaultEndpointsProtocol=https;AccountName=" . $this->accountName . ";AccountKey=" . $this->accountKey;
         $blobRestProxy = ServicesBuilder::getInstance()->createBlobService($connectionString);
 
         try {
             // List all blobs.
-            $blob_list = $blobRestProxy->listBlobs("styrdadokument");
+            $blob_list = $blobRestProxy->listBlobs($this->containerName);
             $blobs = $blob_list->getBlobs();
-            foreach ($blobs as $blob) {
-                array_push($blobs, $blob);
-            }
         } catch (ServiceException $e) {
             $code = $e->getCode();
             $error_message = $e->getMessage();

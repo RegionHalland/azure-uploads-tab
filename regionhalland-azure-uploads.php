@@ -9,7 +9,6 @@
  * License: MIT License
  */
 
-//class_exists('Roots\Bedrock\URLFixer') || require_once __DIR__.'/vendor/autoload.php';
 class_exists('Halland\RegisterSidebarButton') || require_once __DIR__.'/vendor/autoload.php';
 
 use Halland\RegisterSidebarButton;

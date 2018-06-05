@@ -3,10 +3,17 @@
 namespace Halland\Helpers;
 
 /**
- * Copy of the WP_List_Table class from WordPress 4.9.2
- * Use this because the WP_List_Table is not in the public API and subject to change
  *
- * Administration API: WP_List_Table class
+ * !! READ THIS !!
+ * This is a copy of the WpListTable class from WordPress 4.9.2
+ * Use this because the WpListTable is not in the public API and subject to change
+ * !! READ THIS !!
+ *
+ */
+
+/**
+ *
+ * Administration API: WpListTable class
  *
  * @package WordPress
  * @subpackage List_Table
@@ -20,7 +27,7 @@ namespace Halland\Helpers;
  * @access private
  */
 
-class AU_WP_List_Table {
+class WpListTable {
 
 	/**
 	 * The current list of items.
@@ -240,18 +247,18 @@ class AU_WP_List_Table {
 	 * @abstract
 	 */
 	public function ajax_user_can() {
-		die( 'function WP_List_Table::ajax_user_can() must be over-ridden in a sub-class.' );
+		die( 'function WpListTable::ajax_user_can() must be over-ridden in a sub-class.' );
 	}
 
 	/**
 	 * Prepares the list of items for displaying.
-	 * @uses WP_List_Table::set_pagination_args()
+	 * @uses WpListTable::set_pagination_args()
 	 *
 	 * @since 3.1.0
 	 * @abstract
 	 */
 	public function prepare_items() {
-		die( 'function WP_List_Table::prepare_items() must be over-ridden in a sub-class.' );
+		die( 'function WpListTable::prepare_items() must be over-ridden in a sub-class.' );
 	}
 
 	/**
@@ -841,7 +848,7 @@ class AU_WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		die( 'function WP_List_Table::get_columns() must be over-ridden in a sub-class.' );
+		die( 'function WpListTable::get_columns() must be over-ridden in a sub-class.' );
 	}
 
 	/**
@@ -890,7 +897,7 @@ class AU_WP_List_Table {
 	}
 
 	/**
-	 * Public wrapper for WP_List_Table::get_default_primary_column_name().
+	 * Public wrapper for WpListTable::get_default_primary_column_name().
 	 *
 	 * @since 4.4.0
 	 *
@@ -914,7 +921,7 @@ class AU_WP_List_Table {
 		// If the primary column doesn't exist fall back to the
 		// first non-checkbox column.
 		if ( ! isset( $columns[ $default ] ) ) {
-			$default = WP_List_Table::get_default_primary_column_name();
+			$default = WpListTable::get_default_primary_column_name();
 		}
 
 		/**
@@ -1116,7 +1123,7 @@ class AU_WP_List_Table {
 	}
 
 	/**
-	 * Get a list of CSS classes for the WP_List_Table table tag.
+	 * Get a list of CSS classes for the WpListTable table tag.
 	 *
 	 * @since 3.1.0
 	 *

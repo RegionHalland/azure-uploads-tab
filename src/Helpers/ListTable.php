@@ -2,9 +2,9 @@
 
 namespace Halland\Helpers;
 
-use Halland\Helpers\AU_WP_List_Table;
+use Halland\Helpers\WpLIstTable;
 
-class ListTable extends AU_WP_List_Table {
+class ListTable extends WpLIstTable {
 
 	/**
 	 * ***********************************************************************

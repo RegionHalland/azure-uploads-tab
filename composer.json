@@ -15,6 +15,7 @@
     "require": {
         "philo/laravel-blade": "^3.1",
         "beberlei/azure-blob-storage": "^1.0",
-        "microsoft/windowsazure": "^0.5.7"
+        "microsoft/azure-storage-blob": "1.1.0"
+
     }
 }

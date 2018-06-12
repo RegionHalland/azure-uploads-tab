@@ -11,12 +11,14 @@ class AzureUploads
 	protected $ACCOUNT_NAME;
 	protected $ACCOUNT_KEY;
 	protected $CONTAINER_NAME;
+	protected $TAB_NAME;
 	
 	public function __construct()
 	{
 		$this->ACCOUNT_NAME = get_option('azure_uploads_account_name');
 		$this->ACCOUNT_KEY = get_option('azure_uploads_account_key');
 		$this->CONTAINER_NAME = get_option('azure_uploads_container_name');
+		$this->TAB_NAME = get_option('azure_uploads_tab_name');
 
 		add_action( 'admin_menu', array($this, 'addOptionsPage') );
 		add_filter( 'media_upload_tabs', array($this, 'addUploadsTab') );
@@ -58,10 +60,21 @@ class AzureUploads
 			$page
 	    );
 
+		// Add the tab name field
+	    add_settings_field( 
+			'azure_uploads_tab_name',
+			'Uploads Tab Name',
+			function() {
+				echo '<input type="text" id="azure_uploads_tab_name" name="azure_uploads_tab_name" value="' . get_option('azure_uploads_tab_name') . '"/>';
+			},
+			$page,
+			$sectionId
+		);
+
 		// Add the settings fields
 	    add_settings_field( 
 			'azure_uploads_account_name',
-			'Account Name',
+			'Azure Account Name',
 			function() {
 				echo '<input type="text" id="azure_uploads_account_name" name="azure_uploads_account_name" value="' . get_option('azure_uploads_account_name') . '"/>';
 			},
@@ -71,7 +84,7 @@ class AzureUploads
 
 		add_settings_field( 
 			'azure_uploads_account_key',
-			'Account Key',
+			'Azure Account Key',
 			function() {
 				echo '<input type="text" id="azure_uploads_account_key" name="azure_uploads_account_key" value="' . get_option('azure_uploads_account_key') . '"/>';
 			},
@@ -81,7 +94,7 @@ class AzureUploads
 
 		add_settings_field( 
 			'azure_uploads_container_name',
-			'Container',
+			'Azure Container',
 			function() {
 				echo '<input type="text" id="azure_uploads_container_name" name="azure_uploads_container_name" value="' . get_option('azure_uploads_container_name') . '"/>';
 			},
@@ -90,6 +103,11 @@ class AzureUploads
 		);
 
 		// Register the created fields
+		register_setting(
+			$page,
+			'azure_uploads_tab_name'
+		);
+
 		register_setting(
 			$page,
 			'azure_uploads_account_name'
@@ -115,7 +133,8 @@ class AzureUploads
 	{
 		unset($tabs["type_url"]);
 		unset($tabs['library']);
-		$newtab = array('ell_insert_gmap_tab' => __('Styrda Dokument', 'insertgmap'));
+		$tabName = isset($this->TAB_NAME) ? $this->TAB_NAME : 'Azure Uploads';
+		$newtab = array('ell_insert_gmap_tab' => __($tabName, 'insertgmap'));
 		return array_merge($tabs, $newtab);
 	}
 

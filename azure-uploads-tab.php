@@ -11,6 +11,7 @@
 
 define('AUT_PLUGIN_NAME', 'Azure Uploads Tab');
 define('AUT_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define('AUT_PLUGIN_URL', plugins_url('', __FILE__));
 define('AUT_PLUGIN_CACHE_DIR', trailingslashit(wp_upload_dir()['basedir']) . 'cache');
 
 if (file_exists(AUT_PLUGIN_PATH . 'vendor/autoload.php')) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Halland\Helpers;
+namespace AzureUploadsTab\Helpers;
 
 /**
  *

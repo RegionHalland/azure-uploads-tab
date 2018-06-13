@@ -1,11 +1,11 @@
 <?php
 
-namespace Halland\Helpers;
+namespace AzureUploadsTab\Helpers;
 
-use Halland\Helpers\WpLIstTable;
-use Halland\Helpers\Azure;
+use AzureUploadsTab\Helpers\WpListTable;
+use AzureUploadsTab\Helpers\Azure;
 
-class ListTable extends WpLIstTable {
+class ListTable extends WpListTable {
 
 	protected $data;
 
@@ -13,17 +13,17 @@ class ListTable extends WpLIstTable {
 		$this->data = $data;
 
 		// Set parent defaults.
-		parent::__construct( array(
-			'singular' => 'movie',     // Singular name of the listed records.
-			'plural'   => 'movies',    // Plural name of the listed records.
-			'ajax'     => false,       // Does this table support ajax?
-		) );
+		parent::__construct(array(
+			'singular' => 'blob', 
+			'plural'   => 'blobs',
+			'ajax'     => false,  
+		));
 	}
 
 	public function get_columns() {
 		$columns = array(
-			'title' => _x( 'Title', 'Column label', 'wp-list-table-example' ),
-			'url'   => _x( 'Url', 'Column label', 'wp-list-table-example' ),
+			'title' => 'Title',
+			'url'   => 'Url'
 		);
 		return $columns;
 	}
@@ -38,19 +38,25 @@ class ListTable extends WpLIstTable {
 	}
 
 	protected function column_default( $item, $column_name ) {
-		return sprintf( '%1$s', $item->getUrl());
+		return sprintf(
+			'<div class="azure-uploads__flex" style="display: flex;">
+				<input style="flex: 1 0 auto; margin-right: 0.5rem; font-family: monospace;" type="text"id="az%2$s" value="%1$s" readonly>
+				<button class="button button-primary azure-uploads__link" data-clipboard-target="#az%2$s">Kopiera URL</button>
+			</div>',
+			$item->getUrl(),
+			$item->getProperties()->getETag(),
+			$item->getName()
+		);
 	}
 
 	protected function column_title( $item ) {
-		return sprintf( '%1$s', $item->getName());
+		return sprintf( 
+			'<a target=_blank href="%1$s">%2$s</a>',  
+			$item->getUrl(),
+			$item->getName()
+		);
 	}
 
-	protected function process_bulk_action() {
-		// Detect when a bulk action is being triggered.
-		if ( 'delete' === $this->current_action() ) {
-			wp_die( 'Items deleted (or they would be if we had items to delete)!' );
-		}
-	}
 
 	function prepare_items() {
 		$per_page = 10;

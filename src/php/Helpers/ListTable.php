@@ -39,9 +39,9 @@ class ListTable extends WpListTable {
 
 	protected function column_default( $item, $column_name ) {
 		return sprintf(
-			'<div class="azure-uploads__flex" style="display: flex;">
-				<input style="flex: 1 0 auto; margin-right: 0.5rem; font-family: monospace;" type="text"id="az%2$s" value="%1$s" readonly>
-				<button class="button button-primary azure-uploads__link" data-clipboard-target="#az%2$s">Kopiera URL</button>
+			'<div class="aut__td">
+				<input class="aut__input" type="text"id="az%2$s" value="%1$s" readonly>
+				<button class="button button-primary aut__copy-btn" data-clipboard-target="#az%2$s">Kopiera URL</button>
 			</div>',
 			$item->getUrl(),
 			$item->getProperties()->getETag(),

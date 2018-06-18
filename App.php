@@ -50,15 +50,6 @@ class App
 		$slug = 'azure-uploads-options';
 		$sectionId = 'azure_uploads_settings_section';
 
-		// Delete this page, only used for development purposes.
-		add_menu_page(
-			'Azure Uploads',
-			'Azure Uploads',
-			'capability',
-			'menu_slug',
-			array($this, 'render_list_page')
-		);
-
 		// Add options page
 		add_options_page(
 			$title, 

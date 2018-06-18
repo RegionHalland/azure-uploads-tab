@@ -39,7 +39,7 @@ class ListTable extends WpListTable {
 	}
 
 	protected function column_default( $item, $column_name ) {
-		$url = $this->openWebViewerUrl . $item->getUrl();
+		$url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
 		$etag = $item->getProperties()->getETag();
 
 		return sprintf(
@@ -53,7 +53,7 @@ class ListTable extends WpListTable {
 	}
 
 	protected function column_title( $item ) {
-		$url = $this->openWebViewerUrl . $item->getUrl();
+		$url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
 		$name = $item->getName();
 
 		return sprintf( 

@@ -1,12 +1,12 @@
-import Clipboard from 'clipboard';
+import Clipboard from 'clipboard'
 
 (function() {
-
+	
 	if (!Clipboard || !document.querySelector('.aut__copy-btn')) {
-		return;
+		return
 	}
-
-	const cb = new Clipboard('.aut__copy-btn');
+	
+	const cb = new Clipboard('.aut__copy-btn')
 
 	cb.on('success', function(e) {
 		e.trigger.innerHTML = 'Kopierad till urklipp!'
@@ -14,6 +14,6 @@ import Clipboard from 'clipboard';
 		setTimeout(() => {
 			e.trigger.innerHTML = 'Kopiera URL'
 		}, 2000)
-	});
+	})
 
-})();
+})()

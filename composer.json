@@ -1,6 +1,9 @@
 {
     "name": "regionhalland/azure-uploads-tab",
     "type": "wordpress-plugin",
+    "license": "MIT",
+    "description": "List azure blob storage files as a tab in the media selector",
+    "keywords": ["azure", "blob", "plugin"],
     "authors": [
         {
             "name": "Sebastian Marcusson",

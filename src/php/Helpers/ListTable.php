@@ -8,6 +8,7 @@ use AzureUploadsTab\Helpers\Azure;
 class ListTable extends WpListTable {
 
 	protected $data;
+	protected $openWebViewerUrl = 'http://view.officeapps.live.com/op/view.aspx?src=';
 
 	public function __construct($data) {
 		$this->data = $data;
@@ -38,22 +39,27 @@ class ListTable extends WpListTable {
 	}
 
 	protected function column_default( $item, $column_name ) {
+		$url = $this->openWebViewerUrl . $item->getUrl();
+		$etag = $item->getProperties()->getETag();
+
 		return sprintf(
 			'<div class="aut__td">
-				<input class="aut__input" type="text"id="az%2$s" value="%1$s" readonly>
+				<input class="aut__input" type="text" id="az%2$s" value="%1$s" readonly>
 				<button class="button button-primary aut__copy-btn" data-clipboard-target="#az%2$s">Kopiera URL</button>
 			</div>',
-			$item->getUrl(),
-			$item->getProperties()->getETag(),
-			$item->getName()
+			$url,
+			$etag
 		);
 	}
 
 	protected function column_title( $item ) {
+		$url = $this->openWebViewerUrl . $item->getUrl();
+		$name = $item->getName();
+
 		return sprintf( 
 			'<a target=_blank href="%1$s">%2$s</a>',  
-			$item->getUrl(),
-			$item->getName()
+			$url,
+			$name
 		);
 	}
 

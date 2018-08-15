@@ -1,4 +1,5 @@
 composer.phar
-./vendor/
+vendor/
+!./src/php/Vendor
 node_modules/
 .DS_Store

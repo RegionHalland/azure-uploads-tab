@@ -149,7 +149,7 @@ class App
 	 * Echoes the table list view
 	 * @return void
 	 */
-	public function render_list_page()
+	public function renderListPage()
 	{
 		$blobs = self::getBlobs();
 
@@ -166,7 +166,7 @@ class App
 	 */
 	public function iframe()
 	{
-		return wp_iframe( array($this, 'render_list_page') );
+		return wp_iframe( array($this, 'renderListPage') );
 	}
 
 	/**

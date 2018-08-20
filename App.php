@@ -17,7 +17,7 @@ class App
 	public function __construct()
 	{
 		$this->views = __DIR__ . '/src/php/views';
-        $this->cache = wp_upload_dir()['basedir'] . '/cache';
+		$this->cache = wp_upload_dir()['basedir'] . '/cache';
 
 		$this->ACCOUNT_NAME = get_option('azure_uploads_account_name');
 		$this->ACCOUNT_KEY = get_option('azure_uploads_account_key');
@@ -67,10 +67,10 @@ class App
 				echo '<p>Fill out the form with your Azure credentials. All fields are required.</p>';
 			},
 			$slug
-	    );
+		);
 
 		// Add the tab name field
-	    add_settings_field( 
+		add_settings_field( 
 			'azure_uploads_tab_name',
 			'Uploads Tab Name',
 			array($this, 'addSettingsFieldCallback'),
@@ -80,7 +80,7 @@ class App
 		);
 
 		// Add the settings fields
-	    add_settings_field( 
+		add_settings_field( 
 			'azure_uploads_account_name',
 			'Azure Account Name',
 			array($this, 'addSettingsFieldCallback'),
@@ -151,13 +151,20 @@ class App
 	 */
 	public function renderListPage()
 	{
-		$blobs = self::getBlobs();
+		// Check for search query
+		if (isset($_POST['s'])) {
+			// TODO: Search here
+			$query = $_POST['s'];
+			$blobs = self::getBlobsSearch($query);
+		} else {
+			$blobs = self::getBlobs();
+		}
 
 		$listTable = new ListTable($blobs);
 		$listTable->prepare_items();
-        
-        $blade = new Blade($this->views, $this->cache);
-        echo $blade->view()->make('table')->with('listTable', $listTable)->render();
+		
+		$blade = new Blade($this->views, $this->cache);
+		echo $blade->view()->make('table')->with('listTable', $listTable)->render();
 	}
 
 	/**
@@ -170,25 +177,34 @@ class App
 	}
 
 	/**
-	 * Adds the iframe to display content
+	 * Gets all blobs from container
 	 * @return void
 	 */
 	private function getBlobs()
 	{
 		$blobs = array();
-        $connectionString = "DefaultEndpointsProtocol=https;AccountName=" . $this->ACCOUNT_NAME . ";AccountKey=" . $this->ACCOUNT_KEY;
-        $blobClient = BlobRestProxy::createBlobService($connectionString);
+		$connectionString = "DefaultEndpointsProtocol=https;AccountName=" . $this->ACCOUNT_NAME . ";AccountKey=" . $this->ACCOUNT_KEY;
+		$blobClient = BlobRestProxy::createBlobService($connectionString);
 
- 		try {
-            // List all blobs.
-            $blob_list = $blobClient->listBlobs($this->CONTAINER_NAME);
-            $blobs = $blob_list->getBlobs();
-        } catch (ServiceException $e) {
-            $code = $e->getCode();
-            $error_message = $e->getMessage();
-            echo $code.": ".$error_message."<br />";
-        }
+		try {
+			// List all blobs.
+			$blob_list = $blobClient->listBlobs($this->CONTAINER_NAME);
+			$blobs = $blob_list->getBlobs();
+		} catch (ServiceException $e) {
+			$code = $e->getCode();
+			$error_message = $e->getMessage();
+			echo $code.": ".$error_message."<br />";
+		}
 
-        return $blobs;
+		return $blobs;
+	}
+
+	/**
+	 * Gets blobs from container by search query
+	 * @return void
+	 */
+	private function getBlobsSearch($query)
+	{
+		return [];
 	}
 }

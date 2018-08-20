@@ -4,6 +4,7 @@ namespace AzureUploadsTab;
 
 use Philo\Blade\Blade;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
+use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
 use MicrosoftAzure\Storage\Common\ServiceException;
 use AzureUploadsTab\Helpers\ListTable;
 
@@ -187,8 +188,12 @@ class App
 		$blobClient = BlobRestProxy::createBlobService($connectionString);
 
 		try {
-			// List all blobs.
-			$blob_list = $blobClient->listBlobs($this->CONTAINER_NAME);
+			// Set ListBlob options
+			$options = new ListBlobsOptions();
+			$options->setIncludeMetadata(true);
+			
+			// List blobs.
+			$blob_list = $blobClient->listBlobs($this->CONTAINER_NAME, $options);
 			$blobs = $blob_list->getBlobs();
 		} catch (ServiceException $e) {
 			$code = $e->getCode();

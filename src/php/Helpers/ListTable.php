@@ -54,7 +54,13 @@ class ListTable extends WpListTable {
 
 	protected function column_title( $item ) {
 		$url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
-		$name = $item->getName();
+
+		$metadata = $item->getMetadata();
+		
+		$title = base64_decode($metadata['vti_title']);
+		$extension = base64_decode($metadata['File_x0020_Type']);
+
+		$name = $title . '.' . $extension;
 
 		return sprintf( 
 			'<a target=_blank href="%1$s">%2$s</a>',  

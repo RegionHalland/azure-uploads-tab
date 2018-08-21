@@ -193,7 +193,7 @@ class App
 			// Set ListBlob options
 			$options = new ListBlobsOptions();
 			$options->setIncludeMetadata(true);
-			$options->setMaxResults(2);
+			$options->setMaxResults(10);
 			
 			// List blobs.
 			$blob_list = $blobClient->listBlobs($this->CONTAINER_NAME, $options);

@@ -13,7 +13,6 @@ class ListTable extends WpListTable {
 	public function __construct($data) {
 		$this->data = $data;
 
-		// Set parent defaults.
 		parent::__construct(array(
 			'singular' => 'blob', 
 			'plural'   => 'blobs',
@@ -21,6 +20,10 @@ class ListTable extends WpListTable {
 		));
 	}
 
+	/**
+	 * Define columns
+	 * @return array
+	 */
 	public function get_columns() {
 		$columns = array(
 			'title' => 'Title',
@@ -30,13 +33,13 @@ class ListTable extends WpListTable {
 	}
 
 
-	protected function get_sortable_columns() {
-		$sortable_columns = array(
-			'title' => array( 'title', false )
-		);
+	// protected function get_sortable_columns() {
+	// 	$sortable_columns = array(
+	// 		'title' => array( 'title', false )
+	// 	);
 
-		return $sortable_columns;
-	}
+	// 	return $sortable_columns;
+	// }
 
 	protected function column_default( $item, $column_name ) {
 		$url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
@@ -53,22 +56,82 @@ class ListTable extends WpListTable {
 	}
 
 	protected function column_title( $item ) {
-		$url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
-
-		$metadata = $item->getMetadata();
 		
-		$title = base64_decode($metadata['vti_title']);
-		$extension = base64_decode($metadata['File_x0020_Type']);
+		//$metadata = $item->getMetadata();
+//
+		//$title = isset($metadata['vti_title']) ? base64_decode($metadata['vti_title']) : '';
+		//
+		//$guid = isset($metadata['GUID']) ? base64_decode($metadata['GUID']) : '';
+	//
+		//$fileName = $title . '.' . $filetype;
+//
+		//var_dump($fileUrl);
 
-		$name = $title . '.' . $extension;
-
-		return sprintf( 
-			'<a target=_blank href="%1$s">%2$s</a>',  
-			$url,
-			$name
+		return sprintf( '<a target=_blank href="%1$s">%2$s</a>', 
+			self::getBlobUrl($item),
+			self::getBlobName($item)
 		);
+
+		//$guid = base64_decode($metadata['GUID']);
+
+		// If extension is .aspx, it's a link and we won't need Open Web Viewer.
+		//if ($extension === 'aspx') {
+
+		//} else 
+
+		//$url = $guid . $extension;
+
+		//var_dump($item->getProperties()->getContentType());
+
+		
+		
+		//$title = base64_decode($metadata['vti_title']);
+		
+
+		//if (isset($metadata['URL'])) {
+			//var_dump($extension);
+			//var_dump(base64_decode($metadata['URL']));
+		//}
+		
+
+		//$url = base64_decode($metadata);
+
+		// $name = $title . '.' . $extension;
+		// $url = str_replace(' ', '%20', $this->openWebViewerUrl . $item->getUrl());
 	}
 
+	/**
+	 * Build the blob URL
+	 * @return string 
+	 */
+	protected function getBlobUrl($blob) {
+		$metadata = $blob->getMetadata();
+
+		$guid = isset($metadata['GUID']) ? base64_decode($metadata['GUID']) : '';
+		$filetype = isset($metadata['File_x0020_Type']) ? base64_decode($metadata['File_x0020_Type']) : '';
+
+		var_dump($filetype);
+
+		// If extension is .aspx, it's a link and we won't need Open Web Viewer.
+		if ($filetype === 'aspx') {
+			return isset($metadata['URL']) ? base64_decode($metadata['URL']) : '';
+		}
+
+		return $this->openWebViewerUrl . $guid . '.' . $filetype;
+	}
+
+	/**
+	 * Build the blob filename
+	 * @return string 
+	 */
+	protected function getBlobName($blob) {
+		$metadata = $blob->getMetadata();
+
+		$title = isset($metadata['vti_title']) ? base64_decode($metadata['vti_title']) : '';
+		$filetype = isset($metadata['File_x0020_Type']) ? base64_decode($metadata['File_x0020_Type']) : '';
+
+		return $title . '.' . $filetype;
+	}
 
 	function prepare_items() {
 		$per_page = 10;

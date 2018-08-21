@@ -3,6 +3,7 @@
 namespace AzureUploadsTab;
 
 use Philo\Blade\Blade;
+use Guzzle\Guzzle;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
 use MicrosoftAzure\Storage\Common\ServiceException;
@@ -14,9 +15,10 @@ class App
 	protected $ACCOUNT_KEY;
 	protected $CONTAINER_NAME;
 	protected $TAB_NAME;
+	protected $CONNECTION_STRING;
 	
 	public function __construct()
-	{
+	{	
 		$this->views = __DIR__ . '/src/php/views';
 		$this->cache = wp_upload_dir()['basedir'] . '/cache';
 
@@ -24,6 +26,7 @@ class App
 		$this->ACCOUNT_KEY = get_option('azure_uploads_account_key');
 		$this->CONTAINER_NAME = get_option('azure_uploads_container_name');
 		$this->TAB_NAME = get_option('azure_uploads_tab_name');
+		$this->CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=" . $this->ACCOUNT_NAME . ";AccountKey=" . $this->ACCOUNT_KEY;
 
 		add_action( 'admin_enqueue_scripts', array($this, 'enqueue') );
 		add_action( 'admin_menu', array($this, 'createOptionsPage') );
@@ -184,13 +187,13 @@ class App
 	private function getBlobs()
 	{
 		$blobs = array();
-		$connectionString = "DefaultEndpointsProtocol=https;AccountName=" . $this->ACCOUNT_NAME . ";AccountKey=" . $this->ACCOUNT_KEY;
-		$blobClient = BlobRestProxy::createBlobService($connectionString);
+		$blobClient = BlobRestProxy::createBlobService($this->CONNECTION_STRING);
 
 		try {
 			// Set ListBlob options
 			$options = new ListBlobsOptions();
 			$options->setIncludeMetadata(true);
+			$options->setMaxResults(2);
 			
 			// List blobs.
 			$blob_list = $blobClient->listBlobs($this->CONTAINER_NAME, $options);
@@ -210,6 +213,27 @@ class App
 	 */
 	private function getBlobsSearch($query)
 	{
+		$searchUri = "https://searchcontrolleddocuments.search.windows.net/indexes/azureblob-index/docs?search=" . $query . "&api-version=2016-09-01";
+
+		$client = new \GuzzleHttp\Client();
+
+		$result = $client->request('GET', $searchUri, [
+			'headers' => [
+				'api-key' => '1570F8A4B2C7F2D6739EA20327335175',
+				'Content-Type' => 'application/json'
+			]
+		]);
+
+		$body = json_decode($result->getBody()->getContents())->value;
+
+		$blobs = [];
+
+		foreach ($body as $blob) {
+			array_push($blobs, base64_decode($blob->metadata_storage_path));
+		}
+
+		var_dump($blobs);
+
 		return [];
 	}
 }
